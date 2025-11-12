@@ -7,7 +7,7 @@
     <title>Sign In</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" media="none" onload="if(media!='all')media='all'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"></noscript>
+    
     <!-- Custom Styles -->
     <style>
         :root {
@@ -138,7 +138,7 @@
         </div>
     </main>
 
-
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"></noscript>
     <!-- Bootstrap JS Bundle with Popper -->
     <script async src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
@@ -191,15 +191,15 @@
                         detailsHtml += '</ul>';
 
                         messageContainer.innerHTML = `
-                                                            <div class="alert alert-success">
-                                                                <strong>Success!</strong> You have been logged in.
-                                                                <br>
-                                                                <small>
-                                                                    Details:
-                                                                    ${detailsHtml}
-                                                                </small>
-                                                            </div>
-                                                        `;
+                                                                <div class="alert alert-success">
+                                                                    <strong>Success!</strong> You have been logged in.
+                                                                    <br>
+                                                                    <small>
+                                                                        Details:
+                                                                        ${detailsHtml}
+                                                                    </small>
+                                                                </div>
+                                                            `;
                         console.log('Logged successfully');
                     }
                     else {
@@ -214,11 +214,11 @@
             } catch (error) {
                 // red alert
                 messageContainer.innerHTML = `
-                                                        <div class="alert alert-danger">
-                                                            <strong>Error!</strong> ${error.message}
-                                                            <br><small>Please check your credentials and try again.</small>
-                                                        </div>
-                                                    `;
+                                                            <div class="alert alert-danger">
+                                                                <strong>Error!</strong> ${error.message}
+                                                                <br><small>Please check your credentials and try again.</small>
+                                                            </div>
+                                                        `;
                 console.error('Login error:', error);
             }
         });
