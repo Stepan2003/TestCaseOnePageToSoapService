@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign In</title>
     <!-- Bootstrap CSS -->
-    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- Custom Styles -->
     <style>
         :root {
@@ -136,12 +136,12 @@
 
 
     <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <script>
         async function getClientIp() {
             try {
-                const response = await fetch('https://api.ipify.org?format=json'); 
+                const response = await fetch('https://api.ipify.org?format=json');
                 const data = await response.json();
                 return data.ip;
             } catch (error) {
@@ -186,15 +186,15 @@
                         detailsHtml += '</ul>';
 
                         messageContainer.innerHTML = `
-                                        <div class="alert alert-success">
-                                            <strong>Success!</strong> You have been logged in.
-                                            <br>
-                                            <small>
-                                                Details:
-                                                ${detailsHtml}
-                                            </small>
-                                        </div>
-                                    `;
+                                            <div class="alert alert-success">
+                                                <strong>Success!</strong> You have been logged in.
+                                                <br>
+                                                <small>
+                                                    Details:
+                                                    ${detailsHtml}
+                                                </small>
+                                            </div>
+                                        `;
                         console.log('Logged successfully');
                     }
                     else {
@@ -209,11 +209,11 @@
             } catch (error) {
                 // red alert
                 messageContainer.innerHTML = `
-                                    <div class="alert alert-danger">
-                                        <strong>Error!</strong> ${error.message}
-                                        <br><small>Please check your credentials and try again.</small>
-                                    </div>
-                                `;
+                                        <div class="alert alert-danger">
+                                            <strong>Error!</strong> ${error.message}
+                                            <br><small>Please check your credentials and try again.</small>
+                                        </div>
+                                    `;
                 console.error('Login error:', error);
             }
         });
