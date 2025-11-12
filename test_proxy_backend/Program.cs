@@ -41,6 +41,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapFallbackToFile("/robots.txt", "robots.txt");
 app.MapFallbackToFile("/{path?}", "index.html");
 
 app.Run();
