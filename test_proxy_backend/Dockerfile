@@ -22,7 +22,7 @@ RUN dotnet build "./TestCasePageToSoapService.csproj" -c $BUILD_CONFIGURATION -o
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./TestCasePageToSoapService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-COPY ./wwwroot /app/publish/wwwroot
+COPY ./test_proxy_backend/wwwroot /app/publish/wwwroot
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
 FROM base AS final
