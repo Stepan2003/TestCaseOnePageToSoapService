@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="One page test case project (html, css, javascript, bootstrap) with .net REST proxy backend accessing third-party SOAP service login function.">
     <title>Sign In</title>
-    <!-- Bootstrap CSS -->
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <!-- Custom Styles -->
     <style>
         :root {
             --primary-color: #0d6efd;
@@ -39,11 +38,17 @@
             font-weight: 500;
         }
 
+        .main-content {
+            width: 100%;
+        }
+
         .login-card {
             background: var(--card-bg);
             border-radius: 1rem;
             box-shadow: var(--shadow);
             padding: 2rem;
+            margin-left: auto;
+            margin-right: auto;
             max-width: 400px;
             width: 100%;
             transition: transform 0.3s ease;
@@ -52,6 +57,11 @@
         .form-label {
             font-weight: 600;
             color: #495057;
+        }
+
+        .required::after {
+            content: " *";
+            color: #6c757d;
         }
 
         .btn-primary {
@@ -88,6 +98,13 @@
             color: #842029;
         }
 
+        .invalid-feedback {
+            display: block;
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
         @media (max-width: 576px) {
             .login-card {
                 padding: 1.5rem;
@@ -122,14 +139,16 @@
     <main class="main-content">
         <div class="login-card">
             <h2 class="text-center mb-4">Sign In</h2>
-            <form id="loginForm">
+            <form id="loginForm" novalidate>
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                    <label for="username" class="form-label required">Username</label>
                     <input type="text" class="form-control" id="username" required>
+                    <div class="invalid-feedback"></div>
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label required">Password</label>
                     <input type="password" class="form-control" id="password" required>
+                    <div class="invalid-feedback"></div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Sign In</button>
             </form>
@@ -137,31 +156,91 @@
         </div>
     </main>
 
-
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script async src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script>
-        async function getClientIp() {
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                return data.ip;
-            } catch (error) {
-                console.warn('Could not fetch public IP:', error);
-                return '';
+        document.getElementById('hostnameLink').textContent = window.location.hostname;
+
+        // Validate Form
+        function showError(input, message) {
+            const feedback = input.parentNode.querySelector('.invalid-feedback');
+            feedback.textContent = message;
+            input.classList.add('is-invalid');
+        }
+
+        function clearError(input) {
+            input.classList.remove('is-invalid');
+            const feedback = input.parentNode.querySelector('.invalid-feedback');
+            feedback.textContent = '';
+        }
+
+        function validateField(input) {
+            if (!input.value.trim()) {
+                showError(input, input.name === 'password' || input.id === 'password' ?
+                    'Please enter the password.' : 'Please enter the username.');
+                return false;
+            } else {
+                clearError(input);
+                return true;
             }
         }
-        document.getElementById('hostnameLink').textContent = window.location.hostname;
+        
+        function validateForm() {
+            const username = document.getElementById('username');
+            const password = document.getElementById('password');
+
+            const isUsernameValid = validateField(username);
+            const isPasswordValid = validateField(password);
+
+            return isUsernameValid && isPasswordValid;
+        }
+
+        document.getElementById('username').addEventListener('blur', function () {
+            validateField(this);
+        });
+
+        document.getElementById('password').addEventListener('blur', function () {
+            validateField(this);
+        });
+
+        document.getElementById('username').addEventListener('input', function () {
+            if (this.value.trim())
+            {
+                clearError(this);
+            }
+            else
+            {
+                showError(this, 'Please enter the username.');
+            }
+        });
+
+        document.getElementById('password').addEventListener('input', function () {
+            if (this.value.trim()) {
+                clearError(this);
+            }
+            else
+            {
+                showError(this, 'Please enter the password.');
+            }
+        });
+
+        // Send Form
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
+
+            if (!validateForm()) return;
 
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
             const messageContainer = document.getElementById('messageContainer');
-            const clientIp = await getClientIp();
+            let clientIp = '';
 
             messageContainer.innerHTML = '';
+
+            try {
+                clientIp = await getClientIp();
+            } catch (error) {
+                console.warn('Could not fetch IP:', error);
+            }
 
             try {
                 const response = await fetch('/login', {
@@ -181,46 +260,51 @@
 
                 if (response.ok) {
                     if (data.resultCode >= 0) {
-                        //success alert
                         let detailsHtml = '<ul>';
                         Object.entries(data).forEach(([key, value]) => {
-
                             detailsHtml += `<li><strong>${key}:</strong> ${value}</li>`;
                         });
                         detailsHtml += '</ul>';
 
                         messageContainer.innerHTML = `
-                                                            <div class="alert alert-success">
-                                                                <strong>Success!</strong> You have been logged in.
-                                                                <br>
-                                                                <small>
-                                                                    Details:
-                                                                    ${detailsHtml}
-                                                                </small>
-                                                            </div>
-                                                        `;
+                                <div class="alert alert-success">
+                                    <strong>Success!</strong> You have been logged in.
+                                    <br>
+                                    <small>
+                                        Details:
+                                        ${detailsHtml}
+                                    </small>
+                                </div>
+                            `;
                         console.log('Logged successfully');
-                    }
-                    else {
-                        //200, resultCode<0
+                    } else {
                         throw new Error(data.resultMessage);
                     }
                 } else {
-                    // NOT 200
                     throw new Error(data.error || response.statusText);
                 }
 
             } catch (error) {
-                // red alert
                 messageContainer.innerHTML = `
-                                                        <div class="alert alert-danger">
-                                                            <strong>Error!</strong> ${error.message}
-                                                            <br><small>Please check your credentials and try again.</small>
-                                                        </div>
-                                                    `;
+                        <div class="alert alert-danger">
+                            <strong>Error!</strong> ${error.message}
+                            <br><small>Please check your credentials and try again.</small>
+                        </div>
+                    `;
                 console.error('Login error:', error);
             }
         });
+
+        async function getClientIp() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.warn('Could not fetch public IP:', error);
+                return '';
+            }
+        }
     </script>
 </body>
 </html>
