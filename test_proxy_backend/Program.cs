@@ -41,6 +41,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapFallbackToFile("/yandex_7f04207747b87669.html", "yandex_7f04207747b87669.html");
 app.MapFallbackToFile("/robots.txt", "robots.txt");
 app.MapFallbackToFile("/{path?}", "index.html");
 
